@@ -20,8 +20,10 @@ class MyApp extends StatelessWidget {
         accentColor: Colors.amber,
         fontFamily: 'Quicksand',
         textTheme: ThemeData.light().textTheme.copyWith(
-          title: TextStyle(fontFamily: 'OpenSans', fontSize: 18, fontWeight: FontWeight.bold)
+          title: TextStyle(fontFamily: 'OpenSans', fontSize: 18, fontWeight: FontWeight.bold),
+          button: TextStyle(color: Colors.white)
         ),
+        
         appBarTheme: AppBarTheme(
           textTheme: ThemeData.light().textTheme.copyWith(
             title: TextStyle(fontFamily: 'OpenSans',fontSize: 20,fontWeight: FontWeight.bold)
@@ -54,16 +56,23 @@ class _MyHomePageState extends State<MyHomePage> {
     }).toList();
   }
 
-  void _addNewTransaction(String title, double amount) {
+  void _addNewTransaction(String title, double amount, DateTime selectedDate) {
     var newTx = Transaction(
         id: DateTime.now().toString(),
         title: title,
         amount: amount,
-        date: DateTime.now());
+        date: selectedDate);
     setState(() {
       userTransactionList.add(newTx);
       userTransactionList.sort((a, b) => b.date.compareTo(a.date));
     });
+  }
+
+  void deleteSelectedTransaction(int index){   
+    setState(() {
+      userTransactionList.removeAt(index);
+    }); 
+    
   }
 
   void _startAddNewTransaction(BuildContext ctx){
@@ -94,7 +103,7 @@ class _MyHomePageState extends State<MyHomePage> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
           Chart(_recentTransactiion),
-          Card(child: TransactionList(userTransactionList)),
+          Card(child: TransactionList(userTransactionList,deleteSelectedTransaction)),
         ],
       )),
       floatingActionButton: FloatingActionButton(
